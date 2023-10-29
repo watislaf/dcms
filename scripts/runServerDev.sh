@@ -1,1 +1,1 @@
-cd $DCSM_SERVER_PATH && pnpm run start:dev ;
+cd $DCSM_SERVER && pnpm run start:dev ;

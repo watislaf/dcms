@@ -1,1 +1,1 @@
-cd "$DCSM_ADMIN_PANEL_PATH" && bun run dev;
+cd "$DCSM_ADMIN_PANEL" && pnpm run dev;

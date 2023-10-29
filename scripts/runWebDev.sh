@@ -1,1 +1,1 @@
-cd $DCSM_WEB_PATH && bun run dev ;
+cd $DCSM_WEB && pnpm run dev ;
