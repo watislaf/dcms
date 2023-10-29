@@ -16,6 +16,12 @@
     "noImplicitAny": false,
     "strictBindCallApply": false,
     "forceConsistentCasingInFileNames": false,
-    "noFallthroughCasesInSwitch": false
+    "noFallthroughCasesInSwitch": false,
+    "paths": {
+      "@/*": ["src/*"],
+      "@dto/*": ["src/api/dto/*"],
+      "@wrappers/*": ["src/api/wrappers/*"],
+      "@repos/*": ["src/api/repos/*"]
+    }
   }
 }
