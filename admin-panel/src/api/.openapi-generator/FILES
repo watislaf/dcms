@@ -1,0 +1,15 @@
+.gitignore
+.npmignore
+.openapi-generator-ignore
+api.ts
+apis/auth-api.ts
+apis/video-api.ts
+base.ts
+common.ts
+configuration.ts
+git_push.sh
+index.ts
+models/auth-login-dto.ts
+models/index.ts
+models/jwt-token-dto.ts
+models/video-dto.ts

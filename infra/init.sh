@@ -1,4 +1,5 @@
-isLocked=$(git config --local --get filter.git-crypt.smudge)
+
+isLocked=$(git -C $DCMS config --local --get filter.git-crypt.smudge)
 
 if [[ -z $isLocked ]]; then
   export AWS_ACCESS_KEY_ID=""

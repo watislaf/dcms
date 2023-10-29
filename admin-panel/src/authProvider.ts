@@ -1,24 +1,17 @@
 import { AuthBindings } from '@refinedev/core';
-
-export const TOKEN_KEY = 'refine-auth';
+import { TOKEN_KEY } from 'src/utils/constant';
+import { apis } from 'src/api/initializeApi';
+import { Failure, Success } from 'src/utils/errorHandlers';
 
 export const authProvider: AuthBindings = {
-    login: async ({ username, email, password }) => {
-        if ((username || email) && password) {
-            localStorage.setItem(TOKEN_KEY, username);
-            return {
-                success: true,
-                redirectTo: '/',
-            };
+    login: async ({ email, password }) => {
+        try {
+            const { data } = await apis().auth.signIn({ email, password });
+            localStorage.setItem(TOKEN_KEY, data.token);
+            return Success.to('/');
+        } catch (error) {
+            return Failure.from(error);
         }
-
-        return {
-            success: false,
-            error: {
-                name: 'LoginError',
-                message: 'Invalid username or password',
-            },
-        };
     },
     logout: async () => {
         localStorage.removeItem(TOKEN_KEY);
