@@ -1,5 +1,4 @@
-variable "env" {
-  description = "Env"
+variable "name" {
   type        = string
 }
 
@@ -11,10 +10,6 @@ variable "vpc_id" {
   type        = string
 }
 
-variable "private_subnets_ids" {
-  type = list(string)
-}
-
 variable "external_alb_security_group_id" {
   type = string
 }
@@ -23,10 +18,15 @@ variable "external_alb_id" {
   type = string
 }
 
-variable "health_check_path" {
+variable "check_health_path" {
   type = string
 }
 
+
 variable "ecsTaskExecutionRoleArn" {
+  type = string
+}
+
+variable "repo_url" {
   type = string
 }

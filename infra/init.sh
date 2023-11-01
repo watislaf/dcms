@@ -8,3 +8,6 @@ if [[ -z $isLocked ]]; then
 else
   source "$DCSM_INFRA"/secrets.sh
 fi;
+
+export TF_VAR_DCMS_ADMIN_PANEL=$DCMS/admin-panel
+export TF_VAR_DCSM_SERVER=$DCMS/server

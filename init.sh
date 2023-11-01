@@ -4,7 +4,7 @@ export DCMS=/Users/vladislavkozulin/work/dcms
 
 # private paths
 export DCMS_SCRIPTS=$DCMS/scripts
-export DCSM_ADMIN_PANEL=$DCMS/admin-panel
+export DCMS_ADMIN_PANEL=$DCMS/admin-panel
 export DCSM_SERVER=$DCMS/server
 export DCSM_WEB=$DCMS/web
 export DCSM_DIGITAL_SINAGE=$DCMS/digital-sinage

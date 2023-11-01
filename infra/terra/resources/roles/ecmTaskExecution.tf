@@ -1,11 +1,3 @@
-resource "aws_iam_role" "ecsTaskExecution" {
-  name               = "ecsTaskExecution"
-  assume_role_policy = data.aws_iam_policy_document.assume_role_policy.json
-  tags               = {
-    Name = "ecsTaskExecution"
-  }
-}
-
 data "aws_iam_policy_document" "ecsTaskExecution" {
   statement {
     actions = ["sts:AssumeRole"]
@@ -14,6 +6,15 @@ data "aws_iam_policy_document" "ecsTaskExecution" {
       type        = "Service"
       identifiers = ["ecs-tasks.amazonaws.com"]
     }
+  }
+}
+
+
+resource "aws_iam_role" "ecsTaskExecution" {
+  name               = "ecsTaskExecution"
+  assume_role_policy = data.aws_iam_policy_document.ecsTaskExecution.json
+  tags               = {
+    Name = "ecsTaskExecution"
   }
 }
 
