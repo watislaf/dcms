@@ -1,37 +1,3 @@
-resource "aws_ecr_repository" "web" {
-  name = local.name
-  tags = {
-    Name = local.name
-  }
-  force_delete = true
-}
-
-resource "aws_ecr_lifecycle_policy" "default_policy" {
-  repository = aws_ecr_repository.web.name
-
-
-  policy = jsonencode(
-	{
-	    "rules": [
-	        {
-	            "rulePriority": 1,
-	            "description": "Keep only the last untagged images.",
-	            "selection": {
-	                "tagStatus": "untagged",
-	                "countType": "imageCountMoreThan",
-	                "countNumber": ${var.untagged_images}
-	            },
-	            "action": {
-	                "type": "expire"
-	            }
-	        }
-	    ]
-	}
-  )
-
-
-}
-
 resource "aws_ecs_cluster" "web" {
   name = local.name
   tags = {
@@ -39,23 +5,23 @@ resource "aws_ecs_cluster" "web" {
   }
 }
 
-resource "aws_ecs_service" "my_first_service" {
+resource "aws_ecs_service" "service" {
   name            = "${local.name}-service"
   cluster         = aws_ecs_cluster.web.id
   task_definition = aws_ecs_task_definition.web.arn
-  desired_count   = 1
+  desired_count   = 2
   launch_type     = "FARGATE"
-  depends_on = [aws_iam_role_policy_attachment.ecsTaskExecutionRole_policy]
+  depends_on      = [var.ecsTaskExecutionRoleArn, null_resource.send_docker_image]
 
   network_configuration {
     subnets          = var.private_subnets_ids
     assign_public_ip = false
-    security_groups = [aws_security_group.web_container.id]
+    security_groups  = [aws_security_group.web_container.id]
   }
 
   load_balancer {
     target_group_arn = aws_alb_target_group.web.arn
-    container_name   = "${local.name}-LB-container"
+    container_name   = local.name
     container_port   = var.port
   }
   tags = {
@@ -66,8 +32,8 @@ resource "aws_ecs_service" "my_first_service" {
 resource "aws_security_group" "web_container" {
   description = "allow inbound access from the ALB only"
 
-  name        = "${local.name}-container"
-  vpc_id      = var.vpc_id
+  name   = "${local.name}-container"
+  vpc_id = var.vpc_id
 
   ingress {
     protocol        = "tcp"

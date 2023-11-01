@@ -7,6 +7,10 @@ terraform {
   }
 }
 
+module "roles" {
+  source = "modules/roles"
+}
+
 module "network" {
   source = "./modules/network"
   availability_zones = ["eu-north-1a", "eu-north-1b"]
@@ -22,10 +26,14 @@ module "external_application_load_balancer" {
 }
 
 module "web" {
-  source = "./modules/web"
+  source = "modules/web"
 
   env = "tests"
   port = 4173
+  health_check_path = "healthcheck.html"
+
+  ecsTaskExecutionRoleArn=module.roles.ecsTaskExecutionIamRoleArn
+
   vpc_id = module.network.vpc_id
   private_subnets_ids = module.network.private_subnets_ids
 

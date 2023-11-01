@@ -22,3 +22,11 @@ variable "external_alb_security_group_id" {
 variable "external_alb_id" {
   type = string
 }
+
+variable "health_check_path" {
+  type = string
+}
+
+variable "ecsTaskExecutionRoleArn" {
+  type = string
+}
