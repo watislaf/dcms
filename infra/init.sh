@@ -6,5 +6,5 @@ if [[ -z $isLocked ]]; then
   export AWS_SECRET_ACCESS_KEY=""
   export AWS_DEFAULT_REGION=""
 else
-  ./secrets.sh
+  source "$DCSM_INFRA"/secrets.sh
 fi;

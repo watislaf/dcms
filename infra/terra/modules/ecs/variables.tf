@@ -1,4 +1,4 @@
-variable "demo_app_cluster_name" {
+variable "cluster_name" {
   description = "ECS Cluster Name"
   type        = string
 }
@@ -43,7 +43,7 @@ variable "target_group_name" {
   type        = string
 }
 
-variable "demo_app_service_name" {
+variable "app_service_name" {
   description = "ECS Service Name"
   type        = string
 }

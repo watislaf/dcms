@@ -1,0 +1,11 @@
+.idea
+Dockerfile
+.dockerignore
+node_modules
+npm-debug.log
+test
+dist
+README.md
+.prettierrc
+.eslint.js
+.gitignore

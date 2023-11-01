@@ -7,25 +7,28 @@ terraform {
   }
 }
 
-
-module "ecrRepo" {
-  source = "./modules/ecr"
-  ecr_repo_name = local.ecr_repo_name
+module "network" {
+  source = "./modules/network"
+  availability_zones = ["eu-north-1a", "eu-north-1b"]
+  public_subnets     = ["10.10.100.0/24", "10.10.101.0/24"]
+  private_subnets    = ["10.10.0.0/24", "10.10.1.0/24"]
 }
 
-module "ecsCluster" {
-  source = "./modules/ecs"
+module "external_application_load_balancer" {
+  source = "./modules/external_alb"
 
-  demo_app_cluster_name = local.demo_app_cluster_name
-  availability_zones    = local.availability_zones
+  vpc_id = module.network.vpc_id
+  public_subnets_ids = module.network.public_subnets_ids
+}
 
-  demo_app_task_famliy         = local.demo_app_task_famliy
-  ecr_repo_url                 = module.ecrRepo.repository_url
-  container_port               = local.container_port
-  demo_app_task_name           = local.demo_app_task_name
-  ecs_task_execution_role_name = local.ecs_task_execution_role_name
+module "web" {
+  source = "./modules/web"
 
-  application_load_balancer_name = local.application_load_balancer_name
-  target_group_name              = local.target_group_name
-  demo_app_service_name          = local.demo_app_service_name
+  env = "tests"
+  port = 4173
+  vpc_id = module.network.vpc_id
+  private_subnets_ids = module.network.private_subnets_ids
+
+  external_alb_security_group_id = module.external_application_load_balancer.security_group_id
+  external_alb_id = module.external_application_load_balancer.alb_id
 }

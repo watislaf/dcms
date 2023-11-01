@@ -17,11 +17,13 @@ import { JwtServiceWrapper } from '@/modules/jwt-service-wrapper.service';
 import { ResponseMessageService } from '@/modules/message/response-message.service';
 import { ConfigModule } from '@nestjs/config';
 
-// https://blog.logrocket.com/full-stack-app-tutorial-nestjs-react/
+const ENV = process.env.NODE_ENV;
 
 @Module({
     imports: [
-        ConfigModule.forRoot(),
+        ConfigModule.forRoot({
+            envFilePath: !ENV ? '.env' : `.env.${ENV}`,
+        }),
         MulterModule.register({
             storage: diskStorage({
                 destination: './public',
