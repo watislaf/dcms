@@ -17,7 +17,7 @@ resource "aws_ecs_task_definition" "web" {
         cpu : 256,
         healthCheck : {
           retries = 5
-          command =  [ "CMD-SHELL", "curl -f http://localhost:${var.port}/${var.check_health_path} || exit 1" ]
+          command =  [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:${var.port}/${var.check_health_path} || exit 1" ]
           timeout : 5
           interval : 10
           startPeriod : 20
