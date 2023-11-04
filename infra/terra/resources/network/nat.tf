@@ -1,34 +1,16 @@
-// NAT
-resource "aws_eip" "nat_eip" {
-  domain   = "vpc"
+module "nat" {
+  source = "int128/nat-instance/aws"
+
+  name                        = "main"
+  vpc_id                      = module.vpc.vpc_id
+  public_subnet               = module.vpc.public_subnets[0]
+  private_subnets_cidr_blocks = module.vpc.private_subnets_cidr_blocks
+  private_route_table_ids     = module.vpc.private_route_table_ids
 }
 
-resource "aws_nat_gateway" "nat" {
-  # Allocating the Elastic IP to the NAT Gateway!
-  allocation_id = aws_eip.nat_eip.id
-
-  # Associating it in the Public Subnet!
-  subnet_id = aws_subnet.public[0].id
-  tags = {
-    Name = "Nat-Gateway"
+resource "aws_eip" "nat" {
+  network_interface = module.nat.eni_id
+  tags              = {
+    "Name" = "nat-instance-main"
   }
-}
-
-resource "aws_route_table" "nat" {
-  vpc_id = aws_vpc.main.id
-
-  route {
-    cidr_block = "0.0.0.0/0"
-    nat_gateway_id = aws_nat_gateway.nat.id
-  }
-
-  tags = {
-    Name = "Route Table for NAT Gateway"
-  }
-}
-
-resource "aws_route_table_association" "nat" {
-  count          = length(var.public_subnets)
-  subnet_id      = element(aws_subnet.private.*.id, count.index)
-  route_table_id = aws_route_table.nat.id
 }

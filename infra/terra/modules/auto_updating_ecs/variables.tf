@@ -25,3 +25,7 @@ variable "port" {
 variable "lb_target_group" {
   type = string
 }
+
+variable "repo_version" {
+  type = string
+}

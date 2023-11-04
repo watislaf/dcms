@@ -13,7 +13,7 @@ resource "aws_ecr_lifecycle_policy" "default_policy" {
       "rules" : [
         {
           "rulePriority" : 1,
-          "description" : "Keep last 4 images",
+          "description" : "Keep last 2 images",
           "selection" : {
             "tagStatus" : "tagged",
             "tagPrefixList" : ["v"],
@@ -33,13 +33,13 @@ resource "null_resource" "send_docker_image" {
   provisioner "local-exec" {
     command = <<EOF
 aws ecr get-login-password --region eu-central-1  | docker login --username AWS --password-stdin 211439781557.dkr.ecr.eu-central-1.amazonaws.com
-docker build -t "${aws_ecr_repository.repo.repository_url}:latest" -f ${var.project_folder}/Dockerfile ${var.project_folder}
-docker push "${aws_ecr_repository.repo.repository_url}:latest"
+docker build -t "${aws_ecr_repository.repo.repository_url}:${var.repo_version}" -f ${var.project_folder}/Dockerfile ${var.project_folder}
+docker push "${aws_ecr_repository.repo.repository_url}:${var.repo_version}"
     EOF
   }
 
   triggers = {
-    "run_at" = timestamp()
+    value = var.repo_version
   }
 
   depends_on = [

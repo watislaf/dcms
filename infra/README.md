@@ -17,3 +17,5 @@ aws ecr create-repository --repository-name REPO_NAME
 docker-compose build
 docker-compose push   
 ```
+
+terraform destroy --target aws_instance.demo_vm_1

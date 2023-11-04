@@ -1,10 +1,6 @@
-terraform {
-  required_providers {
-    aws = {
-      source  = "hashicorp/aws"
-      version = "~> 5.0"
-    }
-  }
+locals {
+  private_key_path     = "${var.DCSM_INFRA}/ssh/key"
+  public_key_path      = "${var.DCSM_INFRA}/ssh/key.pub"
 }
 
 module "roles" {
@@ -14,8 +10,8 @@ module "roles" {
 module "network" {
   source             = "./resources/network"
   availability_zones = ["eu-central-1a", "eu-central-1b"]
-  public_subnets     = ["10.10.100.0/24", "10.10.101.0/24"]
-  private_subnets    = ["10.10.0.0/24", "10.10.1.0/24"]
+  public_subnets     = ["172.18.100.0/24", "172.18.101.0/24"]
+  private_subnets    = ["172.18.0.0/24", "172.18.1.0/24"]
 }
 
 module "external_application_load_balancer" {
@@ -28,6 +24,8 @@ module "external_application_load_balancer" {
 
 module "web_container" {
   source = "./modules/auto_updating_ecs"
+
+  repo_version = "1.0.0"
 
   name                = module.web_task.name
   port                = module.web_task.port
@@ -54,4 +52,41 @@ module "web_task" {
   external_alb_id                = module.external_application_load_balancer.alb_id
 
   ecsTaskExecutionRoleArn = module.roles.ecsTaskExecutionIamRoleArn
+}
+
+module "bastion" {
+  source        = "./resources/bastion_host"
+  private_key_path     = local.private_key_path
+  public_key_path      = local.public_key_path
+  ingress_ip      = "0.0.0.0/0" ## UNSECURE
+
+  instance_type     = "t3.nano"
+  instance_ami    = "ami-0a485299eeb98b979"
+  public_subnet_id = module.network.public_subnets_ids[1]
+  vpc_id           = module.network.vpc_id
+}
+
+
+module "mongodb" {
+  source        = "resources/mongodb"
+  vpc_id        = module.network.vpc_id
+  subnet_id     = module.network.private_subnets_ids[1]
+  azone         = module.network.azones[1]
+
+  ssh_user      = "watislaf"
+  instance_type = "t3.micro"
+  ami_id        = "ami-0a485299eeb98b979"
+
+  mongodb_version = "7.0"
+  replicaset_name = "mongo-rp0"
+  replica_count   = 1
+  replica_size   = 10
+  private_key     = file(local.private_key_path)
+  public_key      = file(local.public_key_path)
+
+  bastion_host    = module.bastion.bastion_ip
+
+  tags            = {
+    Name        = "MongoDB"
+  }
 }
