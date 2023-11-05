@@ -68,12 +68,13 @@ module "bastion" {
 
 
 module "mongodb" {
-  source        = "resources/mongodb"
+  keypair_name  = module.bastion.keypair_name
+  source        = "./resources/mongodb"
   vpc_id        = module.network.vpc_id
   subnet_id     = module.network.private_subnets_ids[1]
   azone         = module.network.azones[1]
 
-  ssh_user      = "watislaf"
+  ssh_user      = "ec2-user"
   instance_type = "t3.micro"
   ami_id        = "ami-0a485299eeb98b979"
 
@@ -81,8 +82,7 @@ module "mongodb" {
   replicaset_name = "mongo-rp0"
   replica_count   = 1
   replica_size   = 10
-  private_key     = file(local.private_key_path)
-  public_key      = file(local.public_key_path)
+  private_key_path     = local.private_key_path
 
   bastion_host    = module.bastion.bastion_ip
 
