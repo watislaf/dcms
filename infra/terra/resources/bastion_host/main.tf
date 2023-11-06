@@ -30,27 +30,41 @@ resource "aws_eip" "bastion" {
   instance                  = aws_instance.bastion.id
 }
 
+data "template_file" "userdata" {
+  template = file("${path.module}/jumpbox_userdata.sh")
+}
+
 resource "aws_instance" "bastion" {
   ami                         = var.instance_ami
   instance_type               = var.instance_type
-  key_name                    = aws_key_pair.bastion_key.key_name
+  key_name                    = var.key_name
   vpc_security_group_ids      = [aws_security_group.bastion.id]
   subnet_id                   = var.public_subnet_id
-  associate_public_ip_address = false
-  user_data                   = <<EOF
-  #!/bin/bash
-  sudo yum update --all -y
-  sudo yum install readline-devel openssl-devel -y
-EOF
+  associate_public_ip_address = true
+  user_data                   = data.template_file.userdata.rendered
 
-root_block_device {
+  provisioner "file" {
+    source      = var.private_key_path
+    destination = "/home/ec2-user/id_rsa"
+
+    connection {
+      type         = "ssh"
+      user         = "ec2-user"
+      host         = self.public_ip
+      agent        = false
+      private_key  = var.private_key
+    }
+  }
+
+  root_block_device {
     volume_size           = 8
     delete_on_termination = true
-    volume_type           = "gp2"
-    tags = {
+    volume_type           = "standard"
+    tags                  = {
       Name = "bastion_root"
     }
   }
+
   credit_specification {
     cpu_credits = "standard"
   }

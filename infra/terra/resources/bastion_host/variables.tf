@@ -10,18 +10,22 @@ variable "instance_type" {
   type = string
 }
 
-variable "public_key_path" {
-  type = string
-}
-
 variable "public_subnet_id" {
   type = string
 }
 
-variable "private_key_path" {
+variable "ingress_ip" {
   type = string
 }
 
-variable "ingress_ip" {
+variable "key_name" {
+  type = string
+}
+
+variable "private_key" {
+  type = string
+}
+
+variable "private_key_path" {
   type = string
 }

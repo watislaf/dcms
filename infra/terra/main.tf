@@ -1,6 +1,6 @@
 locals {
-  private_key_path     = "${var.DCSM_INFRA}/ssh/key"
-  public_key_path      = "${var.DCSM_INFRA}/ssh/key.pub"
+  private_key_path = "${var.DCSM_INFRA}/ssh/key"
+  public_key_path  = "${var.DCSM_INFRA}/ssh/key.pub"
 }
 
 module "roles" {
@@ -54,39 +54,67 @@ module "web_task" {
   ecsTaskExecutionRoleArn = module.roles.ecsTaskExecutionIamRoleArn
 }
 
-module "bastion" {
-  source        = "./resources/bastion_host"
-  private_key_path     = local.private_key_path
-  public_key_path      = local.public_key_path
-  ingress_ip      = "0.0.0.0/0" ## UNSECURE
+module "key" {
+  source           = "./resources/keys"
+  private_key_path = local.private_key_path
+  public_key_path  = local.public_key_path
+}
 
-  instance_type     = "t3.nano"
-  instance_ami    = "ami-0a485299eeb98b979"
+module "bastion" {
+  source           = "./resources/bastion_host"
+  private_key_path = module.key.private_key_path
+  key_name         = module.key.keypair_name
+  private_key      = module.key.private_key
+
+  ingress_ip       = "0.0.0.0/0" ## UNSECURE
+
+  instance_type    = "t3.nano"
+  instance_ami     = "ami-0a485299eeb98b979"
   public_subnet_id = module.network.public_subnets_ids[1]
   vpc_id           = module.network.vpc_id
 }
 
 
-module "mongodb" {
-  keypair_name  = module.bastion.keypair_name
-  source        = "./resources/mongodb"
-  vpc_id        = module.network.vpc_id
-  subnet_id     = module.network.private_subnets_ids[1]
-  azone         = module.network.azones[1]
+#module "mongodb" {
+#  keypair_name  = module.bastion.keypair_name
+#  source        = "./resources/mongodb"
+#  vpc_id        = module.network.vpc_id
+#  subnet_id     = module.network.private_subnets_ids[1]
+#  azone         = module.network.azones[1]
+#
+#  ssh_user      = "ec2-user"
+#  instance_type = "t3.micro"
+#  ami_id        = "ami-0a485299eeb98b979"
+#
+#  mongodb_version = "7.0"
+#  replicaset_name = "mongo-rp0"
+#  replica_count   = 1
+#  replica_size   = 10
+#  private_key_path     = local.private_key_path
+#
+#  bastion_host    = module.bastion.bastion_ip
+#
+#  tags            = {
+#    Name        = "MongoDB"
+#  }
+#}
 
-  ssh_user      = "ec2-user"
-  instance_type = "t3.micro"
-  ami_id        = "ami-0a485299eeb98b979"
 
-  mongodb_version = "7.0"
-  replicaset_name = "mongo-rp0"
-  replica_count   = 1
-  replica_size   = 10
-  private_key_path     = local.private_key_path
+module "mongodb_cluster" {
+  source           = "./resources/mongodb_cluster"
+  key_name         = module.key.keypair_name
+  private_key_path = module.key.private_key_path
+  private_key      = module.key.private_key
+  vpc_id           = module.network.vpc_id
+  vpc_cidr_block   = module.network.vpc_cidr_block
 
-  bastion_host    = module.bastion.bastion_ip
-
-  tags            = {
-    Name        = "MongoDB"
-  }
+  private_subnet_ids  = module.network.private_subnets_ids
+  jumpbox_public_ip   = module.bastion.bastion_ip
+  replica_set_name    = "mongoRs"
+  num_secondary_nodes = 0
+  mongo_username      = "admin"
+  mongo_password      = "mongo4pass"
+  mongo_database      = "admin"
+  primary_node_type   = "t2.micro"
+  secondary_node_type = "t2.micro"
 }
