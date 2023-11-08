@@ -1,7 +1,7 @@
 data "aws_region" "current" {}
 
 data "template_file" "userdata" {
-  template = "${file("${path.module}/mongo_userdata.sh")}"
+  template = file("${path.module}/userdata.sh")
   vars     = {
     replica_set_name = var.replica_set_name
     mongo_password   = var.mongo_password
@@ -22,7 +22,7 @@ resource "aws_instance" "mongo_secondary" {
   vpc_security_group_ids = [aws_security_group.mongo_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.mongo-instance-profile.name
   root_block_device {
-    volume_type = "standard"
+    volume_type           = "standard"
     delete_on_termination = true
   }
 
@@ -32,42 +32,12 @@ resource "aws_instance" "mongo_secondary" {
   }
 
   provisioner "file" {
-    source      = "${path.module}/populate_hosts_file.py"
-    destination = "/home/ec2-user/populate_hosts_file.py"
-
-    connection {
-      type         = "ssh"
-      user         = "ec2-user"
-      host         = "${self.private_ip}"
-      agent        = false
-      private_key  = var.private_key
-      bastion_host = "${var.jumpbox_public_ip}"
-      bastion_user = "ec2-user"
-    }
-  }
-
-  provisioner "file" {
-    source      = "${path.module}/parse_instance_tags.py"
-    destination = "/home/ec2-user/parse_instance_tags.py"
-
-    connection {
-      type         = "ssh"
-      user         = "ec2-user"
-      host         = self.private_ip
-      agent        = false
-      private_key  = var.private_key
-      bastion_host = var.jumpbox_public_ip
-      bastion_user = "ec2-user"
-    }
-  }
-
-  provisioner "file" {
     source      = var.private_key_path
-    destination = "/home/ec2-user/keyFile"
+    destination = "/home/ubuntu/keyFile"
 
     connection {
       type         = "ssh"
-      user         = "ec2-user"
+      user         = "ubuntu"
       host         = self.private_ip
       agent        = false
       private_key  = var.private_key
@@ -87,7 +57,7 @@ resource "aws_instance" "mongo_primary" {
   vpc_security_group_ids = [aws_security_group.mongo_sg.id]
   iam_instance_profile   = aws_iam_instance_profile.mongo-instance-profile.name
   root_block_device {
-    volume_type = "standard"
+    volume_type           = "standard"
     delete_on_termination = true
   }
 
@@ -97,42 +67,12 @@ resource "aws_instance" "mongo_primary" {
   }
 
   provisioner "file" {
-    source      = "${path.module}/populate_hosts_file.py"
-    destination = "/home/ec2-user/populate_hosts_file.py"
-
-    connection {
-      type         = "ssh"
-      user         = "ec2-user"
-      host         = self.private_ip
-      agent        = false
-      private_key  = var.private_key
-      bastion_host = var.jumpbox_public_ip
-      bastion_user = "ec2-user"
-    }
-  }
-
-  provisioner "file" {
-    source      = "${path.module}/parse_instance_tags.py"
-    destination = "/home/ec2-user/parse_instance_tags.py"
-
-    connection {
-      type         = "ssh"
-      user         = "ec2-user"
-      host         = self.private_ip
-      agent        = false
-      private_key  = var.private_key
-      bastion_host = var.jumpbox_public_ip
-      bastion_user = "ec2-user"
-    }
-  }
-
-  provisioner "file" {
     source      = var.private_key_path
-    destination = "/home/ec2-user/keyFile"
+    destination = "/home/ubuntu/keyFile"
 
     connection {
       type         = "ssh"
-      user         = "ec2-user"
+      user         = "ubuntu"
       host         = self.private_ip
       agent        = false
       private_key  = var.private_key

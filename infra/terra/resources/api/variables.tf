@@ -14,7 +14,7 @@ variable "external_alb_security_group_id" {
   type = string
 }
 
-variable "external_alb_id" {
+variable "alb_listener_arn" {
   type = string
 }
 
@@ -28,5 +28,22 @@ variable "ecsTaskExecutionRoleArn" {
 }
 
 variable "repo_url" {
+  type = string
+}
+
+
+variable "mongo_ip" {
+  type = string
+}
+
+variable "mongo_port" {
+  type = number
+}
+
+variable "mongo_url" {
+  type = string
+}
+
+variable "domain" {
   type = string
 }

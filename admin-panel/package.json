@@ -6,7 +6,7 @@
     "scripts": {
         "dev": "refine dev",
         "build:prod": "tsc && refine build",
-        "start:prod": "refine start --host"
+        "start:prod": "refine start --host "
     },
     "dependencies": {
         "@emotion/react": "^11.11.1",

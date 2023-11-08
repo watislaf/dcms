@@ -84,13 +84,18 @@ resource "aws_alb_target_group" "web" {
   }
 }
 
-resource "aws_alb_listener" "external_http" {
-  load_balancer_arn = var.external_alb_id
-  port              = 80
-  protocol          = "HTTP"
+resource "aws_lb_listener_rule" "static" {
+  listener_arn = var.alb_listener_arn
+  priority     = 100
 
-  default_action {
-    target_group_arn = aws_alb_target_group.web.arn
+  action {
     type             = "forward"
+    target_group_arn = aws_alb_target_group.web.arn
+  }
+
+  condition {
+    host_header {
+      values = [var.domain]
+    }
   }
 }

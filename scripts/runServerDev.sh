@@ -1,2 +1,2 @@
 export NODE_ENW='dev'
-cd $DCSM_SERVER && pnpm run start:dev ;
+cd $DCMS_SERVER && pnpm run start:dev ;

@@ -19,7 +19,7 @@ variable "security_groups" {
 }
 
 variable "port" {
-  type = string
+  type = number
 }
 
 variable "lb_target_group" {

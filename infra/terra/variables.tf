@@ -2,10 +2,10 @@ variable "DCMS_ADMIN_PANEL" {
   type = string
 }
 
-variable "DCSM_SERVER" {
+variable "DCMS_SERVER" {
   type = string
 }
 
-variable "DCSM_INFRA" {
+variable "DCMS_INFRA" {
   type = string
 }

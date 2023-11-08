@@ -36,3 +36,18 @@ resource "aws_security_group" "main" {
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
+
+
+resource "aws_alb_listener" "external_http" {
+  load_balancer_arn = aws_alb.main.arn
+  port              = 80
+  protocol          = "HTTP"
+  default_action {
+    redirect {
+      status_code = "HTTP_301"
+      protocol    = "HTTPS"
+      port        = "443"
+    }
+    type = "redirect"
+  }
+}

@@ -1,5 +1,4 @@
-
-resource "aws_ecs_task_definition" "web" {
+resource "aws_ecs_task_definition" "api" {
   family                = "${var.name}-family" # Naming our first task
   container_definitions = jsonencode(
     [
@@ -9,15 +8,27 @@ resource "aws_ecs_task_definition" "web" {
         essential : true,
         portMappings : [
           {
-            "containerPort" : var.port,
-            "hostPort" : var.port
+            containerPort : var.port,
+            hostPort : var.port
+          },
+          {
+            containerPort : var.mongo_port,
+            hostPort : var.mongo_port
           }
         ],
+        environment : [
+          {
+            "name" : "MONGO_PATH",
+            "value" : var.mongo_url
+          }
+        ]
         memory : 512,
         cpu : 256,
         healthCheck : {
           retries = 5
-          command =  [ "CMD-SHELL", "wget --no-verbose --tries=1 --spider http://localhost:${var.port}/${var.check_health_path} || exit 1" ]
+          command = [
+            "CMD-SHELL", "wget --no-verbose --tries=1 --spider localhost:${var.port}/${var.check_health_path} || exit 1"
+          ]
           timeout : 5
           interval : 10
           startPeriod : 20
@@ -37,7 +48,7 @@ resource "aws_ecs_task_definition" "web" {
 }
 
 
-resource "aws_security_group" "web_container" {
+resource "aws_security_group" "api_container" {
   description = "allow inbound access from the ALB only"
 
   name   = "${var.name}-container"
@@ -61,7 +72,7 @@ resource "aws_security_group" "web_container" {
   }
 }
 
-resource "aws_alb_target_group" "web" {
+resource "aws_alb_target_group" "api" {
   name        = var.name
   port        = var.port
   protocol    = "HTTP"
@@ -84,13 +95,18 @@ resource "aws_alb_target_group" "web" {
   }
 }
 
-resource "aws_alb_listener" "external_http" {
-  load_balancer_arn = var.external_alb_id
-  port              = 80
-  protocol          = "HTTP"
+resource "aws_lb_listener_rule" "static" {
+  listener_arn = var.alb_listener_arn
+  priority     = 99
 
-  default_action {
-    target_group_arn = aws_alb_target_group.web.arn
+  action {
     type             = "forward"
+    target_group_arn = aws_alb_target_group.api.arn
+  }
+
+  condition {
+    host_header {
+      values = [var.domain]
+    }
   }
 }

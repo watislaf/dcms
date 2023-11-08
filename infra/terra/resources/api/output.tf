@@ -7,13 +7,13 @@ output "port" {
 }
 
 output "security_groups" {
-  value = [aws_security_group.web_container.id]
+  value = [aws_security_group.api_container.id]
 }
 
 output "task_definition_arn" {
-  value = aws_ecs_task_definition.web.arn
+  value = aws_ecs_task_definition.api.arn
 }
 
 output "lb_target_group" {
-  value = aws_alb_target_group.web.arn
+  value = aws_alb_target_group.api.arn
 }

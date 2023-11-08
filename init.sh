@@ -5,15 +5,15 @@ export DCMS=/Users/vladislavkozulin/work/dcms
 # private paths
 export DCMS_SCRIPTS=$DCMS/scripts
 export DCMS_ADMIN_PANEL=$DCMS/admin-panel
-export DCSM_SERVER=$DCMS/server
-export DCSM_WEB=$DCMS/web
-export DCSM_DIGITAL_SINAGE=$DCMS/digital-sinage
-export DCSM_INFRA=$DCMS/infra
+export DCMS_SERVER=$DCMS/server
+export DCMS_WEB=$DCMS/web
+export DCMS_DIGITAL_SINAGE=$DCMS/digital-sinage
+export DCMS_INFRA=$DCMS/infra
 
 export PATH=$PATH:$DCMS_SCRIPTS
 
 # webos sdk
-export LG_WEBOS_TV_SDK_HOME="$DCSM_DIGITAL_SINAGE/lib/webOS_TV_SDK"
+export LG_WEBOS_TV_SDK_HOME="$DCMS_DIGITAL_SINAGE/lib/webOS_TV_SDK"
 
 if [ ! -d "$LG_WEBOS_TV_SDK_HOME/CLI/bin" ]; then
   echo install webos Cli https://webostv.developer.lge.com/develop/tools/cli-installation into $LG_WEBOS_TV_SDK_HOME/CLI
@@ -31,4 +31,4 @@ else
 
 fi;
 
-source $DCSM_INFRA/init.sh
+source $DCMS_INFRA/init.sh
