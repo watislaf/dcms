@@ -1,0 +1,4 @@
+// created from ctix 2023-11-11 13:14:28
+
+export * from './create-material.dto';
+export * from './update-material.dto';
