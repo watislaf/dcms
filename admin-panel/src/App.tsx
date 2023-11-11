@@ -5,11 +5,11 @@ import { Refine } from '@refinedev/core';
 import { RefineKbar, RefineKbarProvider } from '@refinedev/kbar';
 import { notificationProvider, RefineThemes } from '@refinedev/mantine';
 import routerBindings, { DocumentTitleHandler, UnsavedChangesNotifier } from '@refinedev/react-router-v6';
-import dataProvider from '@refinedev/simple-rest';
 import { BrowserRouter } from 'react-router-dom';
-
-import { authProvider } from 'src/authProvider';
+import { authProvider } from 'src/providers/authProvider';
 import Routers from 'src/router/Routers';
+import { API_URL } from 'src/utils/env';
+import { dataProvider, getApiResources } from 'src/providers/dataProvider';
 
 function App() {
     const [colorScheme, setColorScheme] = useLocalStorage<ColorScheme>({
@@ -33,32 +33,11 @@ function App() {
                         <Global styles={{ body: { WebkitFontSmoothing: 'auto' } }} />
                         <NotificationsProvider position="top-right">
                             <Refine
-                                dataProvider={dataProvider('https://api.fake-rest.refine.dev')}
+                                dataProvider={dataProvider(API_URL)}
                                 notificationProvider={notificationProvider}
                                 routerProvider={routerBindings}
                                 authProvider={authProvider}
-                                resources={[
-                                    {
-                                        name: 'blog_posts',
-                                        list: '/blog-posts',
-                                        create: '/blog-posts/create',
-                                        edit: '/blog-posts/edit/:id',
-                                        show: '/blog-posts/show/:id',
-                                        meta: {
-                                            canDelete: true,
-                                        },
-                                    },
-                                    {
-                                        name: 'categories',
-                                        list: '/categories',
-                                        create: '/categories/create',
-                                        edit: '/categories/edit/:id',
-                                        show: '/categories/show/:id',
-                                        meta: {
-                                            canDelete: true,
-                                        },
-                                    },
-                                ]}
+                                resources={getApiResources()}
                                 options={{
                                     syncWithLocation: true,
                                     warnWhenUnsavedChanges: true,

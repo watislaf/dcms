@@ -27,6 +27,12 @@ module "key" {
   public_key_path  = local.public_key_path
 }
 
+module "s3_bucket" {
+  source = "./resources/bucket"
+ name = "test-bucket"
+}
+
+
 module "bastion" {
   source           = "./resources/bastion_host"
   private_key_path = module.key.private_key_path
@@ -43,19 +49,22 @@ module "bastion" {
 
 module "mongodb_cluster" {
   source           = "./resources/mongodb_cluster"
+  mongo_port       = 27017
+  mongo_local_port = 27018
+  script_save_path = var.DCMS_INFRA
+
   key_name         = module.key.keypair_name
   private_key_path = module.key.private_key_path
   private_key      = module.key.private_key
   vpc_id           = module.network.vpc_id
   vpc_cidr_block   = module.network.vpc_cidr_block
 
-  private_subnet_ids  = module.network.private_subnets_ids
-  jumpbox_public_ip   = module.bastion.bastion_ip
-  replica_set_name    = "mongoRs"
+  private_subnet_ids = module.network.private_subnets_ids
+  jumpbox_public_ip  = module.bastion.bastion_ip
+  replica_set_name   = "mongoRs"
+
   num_secondary_nodes = 0
-  mongo_username      = "admin"
-  mongo_password      = "mongo4pass"
-  mongo_database      = "admin"
+  mongo_database      = "test"
   primary_node_type   = "t2.micro"
   secondary_node_type = "t2.micro"
 }
@@ -82,7 +91,7 @@ module "api_task" {
 
   name              = "tests-api"
   port              = 8080
-  check_health_path = "api/v1/health"
+  check_health_path = "v1/health"
   domain            = "api.watislaf.com"
 
   vpc_id   = module.network.vpc_id

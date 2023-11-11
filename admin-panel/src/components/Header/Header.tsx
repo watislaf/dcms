@@ -71,6 +71,7 @@ const Header: React.FC<RefineThemedLayoutV2HeaderProps> = ({ sticky }) => {
 
                     {(user?.name || user?.avatar) && (
                         <Group spacing="xs">
+                            {user.id}
                             {user?.name && <Title order={6}>{user?.name}</Title>}
                             <Avatar src={user?.avatar} alt={user?.name} radius="xl" />
                         </Group>

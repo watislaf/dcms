@@ -1,0 +1,1 @@
+ssh -i ${private_key_path} -N ec2-user@${bastion_ip} -L ${mongo_local_port}:${mongo_ip}:${mongo_port}

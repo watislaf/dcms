@@ -4,8 +4,6 @@ data "template_file" "userdata" {
   template = file("${path.module}/userdata.sh")
   vars     = {
     replica_set_name = var.replica_set_name
-    mongo_password   = var.mongo_password
-    mongo_username   = var.mongo_username
     mongo_database   = var.mongo_database
     aws_region       = data.aws_region.current.name
   }
@@ -161,4 +159,20 @@ resource "aws_iam_role_policy" "ec2-describe-instance-policy" {
     ]
 }
 EOF
+}
+
+data "template_file" "connectToDbProd" {
+  template = "${path.module}/connectToDbProd.sh.tftpl"
+  vars = {
+    private_key_path = var.private_key_path,
+    bastion_ip = var.jumpbox_public_ip,
+    mongo_ip = aws_instance.mongo_primary.private_ip,
+    mongo_port = var.mongo_port,
+    mongo_local_port = var.mongo_local_port,
+  }
+}
+
+resource "local_file" "connectToDbProd" {
+  filename = "${var.script_save_path}/connectToDbProd.sh"
+  content = data.template_file.connectToDbProd.rendered
 }

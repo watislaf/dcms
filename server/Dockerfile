@@ -20,6 +20,8 @@ RUN pnpm prune --prod
 
 FROM base AS deploy
 WORKDIR /app
+COPY --from=build /app/public/ ./public/
 COPY --from=build /app/dist/ ./dist/
 COPY --from=build /app/node_modules ./node_modules
+EXPOSE 8080
 CMD [ "node", "dist/main" ]

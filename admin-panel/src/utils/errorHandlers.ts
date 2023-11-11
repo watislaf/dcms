@@ -2,7 +2,7 @@ import { DEFAULT_ERROR, ErrorMessage, NETWORK_ERROR } from 'src/utils/errors';
 import { AxiosError } from 'axios';
 
 class _Success {
-    to(redirectTo: string) {
+    redirect(redirectTo: string) {
         return { success: true, redirectTo };
     }
 }
@@ -13,7 +13,7 @@ type ErrorMessageContainer = {
     };
 };
 
-const containsErrorMessage = (error: any): error is ErrorMessageContainer => {
+const containsMessage = (error: any): error is ErrorMessageContainer => {
     return error?.response?.data?.message && error?.response?.data?.name;
 };
 
@@ -26,7 +26,7 @@ class _Failure {
             errorMessage = NETWORK_ERROR;
         }
 
-        if (containsErrorMessage(error)) {
+        if (containsMessage(error)) {
             errorMessage = error.response.data;
         }
 

@@ -15,5 +15,7 @@
 
 
 export * from './apis/auth-api';
-export * from './apis/video-api';
+export * from './apis/default-api';
+export * from './apis/materials-api';
+export * from './apis/users-api';
 

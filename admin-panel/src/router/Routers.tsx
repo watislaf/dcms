@@ -3,11 +3,10 @@ import { Authenticated } from '@refinedev/core';
 import { CatchAllNavigate, NavigateToResource } from '@refinedev/react-router-v6';
 import { ErrorComponent, ThemedLayoutV2 } from '@refinedev/mantine';
 import Header from 'src/components/Header/Header';
-import { Login } from 'src/pages/login';
-import { ForgotPassword } from 'src/pages/forgotPassword';
+import { LoginPage } from 'src/pages/login';
 import Title from 'src/components/Title/Title';
-import { BlogPostCreate, BlogPostEdit, BlogPostList, BlogPostShow } from 'src/pages/blog-posts';
-import { CategoryCreate, CategoryEdit, CategoryList, CategoryShow } from 'src/pages/categories';
+import { BlogPostCreate } from 'src/pages/blog-posts';
+import { UsersList } from 'src/pages/users/list';
 
 export const Routers = () => {
     return (
@@ -25,17 +24,9 @@ export const Routers = () => {
                 }
             >
                 <Route index element={<NavigateToResource resource="blog_posts" />} />
-                <Route path="/blog-posts">
-                    <Route index element={<BlogPostList />} />
+                <Route path="/users">
+                    <Route index element={<UsersList />} />
                     <Route path="create" element={<BlogPostCreate />} />
-                    <Route path="edit/:id" element={<BlogPostEdit />} />
-                    <Route path="show/:id" element={<BlogPostShow />} />
-                </Route>
-                <Route path="/categories">
-                    <Route index element={<CategoryList />} />
-                    <Route path="create" element={<CategoryCreate />} />
-                    <Route path="edit/:id" element={<CategoryEdit />} />
-                    <Route path="show/:id" element={<CategoryShow />} />
                 </Route>
                 <Route path="*" element={<ErrorComponent />} />
             </Route>
@@ -46,8 +37,7 @@ export const Routers = () => {
                     </Authenticated>
                 }
             >
-                <Route path="/login" element={<Login />} />
-                <Route path="/forgot-password" element={<ForgotPassword />} />
+                <Route path="/login" element={<LoginPage />} />
             </Route>
         </Routes>
     );

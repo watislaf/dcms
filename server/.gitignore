@@ -17,7 +17,7 @@ lerna-debug.log*
 # Tests
 /coverage
 /.nyc_output
-
+/nestjs-vuejs-s3-signedUrl
 # IDEs and editors
 /.idea
 .project
