@@ -59,6 +59,9 @@ dependencies:
   ctix:
     specifier: ^1.8.3
     version: 1.8.3
+  dotenv:
+    specifier: ^16.3.1
+    version: 16.3.1
   install:
     specifier: ^0.13.0
     version: 0.13.0

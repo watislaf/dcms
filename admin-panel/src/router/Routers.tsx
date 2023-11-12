@@ -1,12 +1,9 @@
 import { Outlet, Route, Routes } from 'react-router-dom';
 import { Authenticated } from '@refinedev/core';
 import { CatchAllNavigate, NavigateToResource } from '@refinedev/react-router-v6';
-import { ErrorComponent, ThemedLayoutV2 } from '@refinedev/mantine';
-import Header from 'src/components/Header/Header';
-import { LoginPage } from 'src/pages/login';
-import Title from 'src/components/Title/Title';
-import { BlogPostCreate } from 'src/pages/blog-posts';
+import { LoginPage } from 'src/pages/login/Login';
 import { UsersList } from 'src/pages/users/list';
+import { ErrorComponent, Header, ThemedLayoutV2, Title } from '@refinedev/mui';
 
 export const Routers = () => {
     return (
@@ -15,7 +12,7 @@ export const Routers = () => {
                 element={
                     <Authenticated fallback={<CatchAllNavigate to="/login" />}>
                         <ThemedLayoutV2
-                            Header={() => <Header sticky />}
+                            Header={() => <Header />}
                             Title={({ collapsed }) => <Title collapsed={collapsed} />}
                         >
                             <Outlet />
@@ -23,10 +20,8 @@ export const Routers = () => {
                     </Authenticated>
                 }
             >
-                <Route index element={<NavigateToResource resource="blog_posts" />} />
                 <Route path="/users">
                     <Route index element={<UsersList />} />
-                    <Route path="create" element={<BlogPostCreate />} />
                 </Route>
                 <Route path="*" element={<ErrorComponent />} />
             </Route>

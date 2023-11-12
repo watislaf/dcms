@@ -1,3 +1,6 @@
+// eslint-disable-next-line @typescript-eslint/no-var-requires
+require('dotenv').config({ path: `.env.${process.env.NODE_ENV}` });
+
 import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import { AppModule } from '@/config/app.module';
 import { AppGlobalFilter, initSwagger } from '@/config';

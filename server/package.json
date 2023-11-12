@@ -6,7 +6,7 @@
     "private": true,
     "license": "UNLICENSED",
     "scripts": {
-        "start:dev": "nest build webpack --webpack webpack.config.js --watch",
+        "start:dev": "NODE_ENV=development nest build webpack --webpack webpack.config.js --watch",
         "build:prod": "NODE_ENV=production webpack --config webpack.config.js"
     },
     "dependencies": {
@@ -28,6 +28,7 @@
         "@types/uuid": "^9.0.5",
         "bcrypt": "^5.1.1",
         "ctix": "^1.8.3",
+        "dotenv": "^16.3.1",
         "install": "^0.13.0",
         "mongoose": "^7.6.2",
         "multer": "1.4.5-lts.1",
