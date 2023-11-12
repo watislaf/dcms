@@ -10,7 +10,7 @@ export const initializeApis = () => {
         basePath: API_URL,
         accessToken: localStorage.getItem(TOKEN_KEY) || undefined,
         baseOptions: {
-            timeout: 300,
+            timeout: 5000,
         },
     });
 
@@ -27,6 +27,6 @@ export const apis = () => {
     if (!_apis) {
         _apis = initializeApis();
     }
-    
+
     return _apis;
 };

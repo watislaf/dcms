@@ -19,7 +19,6 @@ const containsMessage = (error: any): error is ErrorMessageContainer => {
 
 class _Failure {
     from(error: any) {
-        console.log(error);
         let errorMessage = DEFAULT_ERROR;
 
         if (error.code === AxiosError.ERR_NETWORK) {

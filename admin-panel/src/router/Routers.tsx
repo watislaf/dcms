@@ -1,9 +1,10 @@
 import { Outlet, Route, Routes } from 'react-router-dom';
 import { Authenticated } from '@refinedev/core';
 import { CatchAllNavigate, NavigateToResource } from '@refinedev/react-router-v6';
-import { LoginPage } from 'src/pages/login/Login';
 import { UsersList } from 'src/pages/users/list';
 import { ErrorComponent, Header, ThemedLayoutV2, Title } from '@refinedev/mui';
+import Login from 'src/pages/login/Login';
+import Register from 'src/pages/login/Register';
 
 export const Routers = () => {
     return (
@@ -32,7 +33,8 @@ export const Routers = () => {
                     </Authenticated>
                 }
             >
-                <Route path="/login" element={<LoginPage />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
             </Route>
         </Routes>
     );
