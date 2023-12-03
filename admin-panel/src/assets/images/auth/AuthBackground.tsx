@@ -21,7 +21,6 @@ const AuthBackground = () => {
                         width={'1000px'}
                         viewBox="50 65 400 400"
                         fill="none"
-                        filter="blur(18px)"
                     >
                         <defs>
                             <linearGradient bx:pinned="true" id="a">

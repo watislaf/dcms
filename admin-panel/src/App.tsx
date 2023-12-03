@@ -11,7 +11,7 @@ import { dataProvider, getApiResources } from 'src/providers/dataProvider';
 import { useI18nProvider } from 'src/providers/i18nProvider';
 import { notificationProvider } from 'src/providers/notificationProvider';
 import ThemeCustomization from 'src/themes';
-import ScrollTop from 'src/components/ScrollTop';
+import ScrollTop from 'src/components/scrollTop';
 
 const App = () => {
     const i18nProvider = useI18nProvider();
@@ -23,7 +23,7 @@ const App = () => {
                     <RefineSnackbarProvider>
                         <Refine
                             i18nProvider={i18nProvider}
-                            dataProvider={dataProvider()}
+                            dataProvider={{ default: dataProvider }}
                             notificationProvider={notificationProvider}
                             routerProvider={routerBindings}
                             authProvider={authProvider}

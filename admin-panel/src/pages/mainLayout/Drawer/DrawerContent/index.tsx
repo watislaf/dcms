@@ -1,9 +1,7 @@
 // project import
-import NavCard from './NavCard.js';
-import Navigation from './Navigation/index.js';
-import SimpleBar from 'src/components/third-party/SimpleBar.js';
-
-// ==============================|| DRAWER CONTENT ||============================== //
+import Navigation from './Navigation/index';
+import SimpleBar from 'src/components/third-party/SimpleBar';
+import { Chip } from '@mui/material';
 
 const DrawerContent = () => (
     <SimpleBar
@@ -15,7 +13,19 @@ const DrawerContent = () => (
         }}
     >
         <Navigation />
-        <NavCard />
+        <Chip
+            label={'v1.0.0'}
+            size="small"
+            sx={{
+                height: 16,
+                alignSelf: 'center',
+                '& .MuiChip-label': { fontSize: '0.625rem', py: 0.25 },
+            }}
+            component="a"
+            href="https://expander.pl/"
+            target="_blank"
+            clickable
+        />
     </SimpleBar>
 );
 

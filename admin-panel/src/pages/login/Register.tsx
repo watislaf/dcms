@@ -3,8 +3,6 @@ import { Link } from 'react-router-dom';
 // material-ui
 import { Grid, Stack, Typography } from '@mui/material';
 
-// project import
-import FirebaseRegister from 'src/pages/login/authentication/AuthRegister';
 import AuthWrapper from 'src/pages/login/AuthWrapper';
 
 // ================================|| REGISTER ||================================ //
@@ -30,9 +28,6 @@ const Register = () => (
                         Already have an account?
                     </Typography>
                 </Stack>
-            </Grid>
-            <Grid item xs={12}>
-                <FirebaseRegister />
             </Grid>
         </Grid>
     </AuthWrapper>

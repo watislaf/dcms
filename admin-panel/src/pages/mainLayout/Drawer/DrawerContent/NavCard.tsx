@@ -2,11 +2,11 @@
 import { Button, CardMedia, Link, Stack, Typography } from '@mui/material';
 
 // project import
-import MainCard from 'src/components/MainCard.js';
+import MainCard from 'src/components/mainCard';
 
 // assets
 import avatar from 'src/assets/images/users/avatar-group.png';
-import AnimateButton from 'src/components/@extended/AnimateButton.js';
+import AnimateButton from 'src/components/@extended/AnimateButton';
 
 // ==============================|| DRAWER CONTENT - NAVIGATION CARD ||============================== //
 

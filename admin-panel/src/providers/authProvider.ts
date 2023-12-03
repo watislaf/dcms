@@ -1,7 +1,8 @@
 import { AuthBindings } from '@refinedev/core';
-import { LAST_LOGIN, LAST_PASSWORD, LAST_REMEMBER, TOKEN_KEY } from 'src/utils/constant';
+import { LAST_LOGIN, LAST_PASSWORD, LAST_REMEMBER, LOGGED_IN } from 'src/utils/constant';
 import { apis } from 'src/api/initializeApi';
 import { Failure, Success } from 'src/utils/errorHandlers';
+import { setToken, unsetToken } from 'src/utils/tokenService';
 
 function handleRemember(remember: boolean, email: string, password: string) {
     if (remember) {
@@ -21,23 +22,28 @@ export const authProvider: AuthBindings = {
 
         try {
             const { data } = await apis().auth.signIn({ email, password });
-            localStorage.setItem(TOKEN_KEY, data.token);
+            setToken(data);
+            localStorage.setItem(LOGGED_IN, 'true');
+
             return Success.redirect('/');
         } catch (error) {
             return Failure.from(error);
         }
     },
     logout: async () => {
-        localStorage.removeItem(TOKEN_KEY);
+        localStorage.removeItem(LOGGED_IN);
+
+        apis().auth.logout().then(unsetToken);
+
         return {
             success: true,
             redirectTo: '/login',
         };
     },
     check: async () => {
-        const token = localStorage.getItem(TOKEN_KEY);
+        const loggedIn = localStorage.getItem(LOGGED_IN);
 
-        if (token) {
+        if (loggedIn) {
             return {
                 authenticated: true,
             };
@@ -48,22 +54,30 @@ export const authProvider: AuthBindings = {
             redirectTo: '/login',
         };
     },
-    getPermissions: async () => ['editor'],
+    getPermissions: async () => ['admin'],
     getIdentity: async () => {
-        const token = localStorage.getItem(TOKEN_KEY);
+        const loggedIn = localStorage.getItem(LOGGED_IN);
 
-        if (token) {
+        if (loggedIn) {
             return {
                 id: 1,
-                name: 'John Doe',
+                name: 'Vladislav Kozulin',
                 avatar: 'https://i.pravatar.cc/300',
             };
         }
 
         return null;
     },
+
     onError: async (error) => {
-        console.error(error);
-        return { error };
+        if (error?.response?.status === 401) {
+            localStorage.removeItem(LOGGED_IN);
+            unsetToken();
+            return {
+                redirectTo: '/login',
+            };
+        }
+
+        return {};
     },
 };

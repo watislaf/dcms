@@ -1,24 +1,20 @@
-import PropTypes from 'prop-types';
 import { useMemo } from 'react';
 
-// material-ui
 import { useTheme } from '@mui/material/styles';
 import { Box, Drawer, useMediaQuery } from '@mui/material';
+import DrawerHeader from './DrawerHeader/index';
+import DrawerContent from './DrawerContent/index';
+import MiniDrawerStyled from './MiniDrawerStyled';
+import { drawerWidth } from 'src/utils/constant';
 
-// project import
-import DrawerHeader from './DrawerHeader/index.js';
-import DrawerContent from './DrawerContent/index.js';
-import MiniDrawerStyled from './MiniDrawerStyled.js';
-import { drawerWidth } from 'config';
+type Props = {
+    open: boolean;
+    handleDrawerToggle: () => void;
+};
 
-// ==============================|| MAIN LAYOUT - DRAWER ||============================== //
-
-const MainDrawer = ({ open, handleDrawerToggle, window }) => {
+const MainDrawer = ({ open, handleDrawerToggle }: Props) => {
     const theme = useTheme();
     const matchDownMD = useMediaQuery(theme.breakpoints.down('lg'));
-
-    // responsive drawer container
-    const container = window !== undefined ? () => window().document.body : undefined;
 
     // header content
     const drawerContent = useMemo(() => <DrawerContent />, []);
@@ -33,7 +29,6 @@ const MainDrawer = ({ open, handleDrawerToggle, window }) => {
                 </MiniDrawerStyled>
             ) : (
                 <Drawer
-                    container={container}
                     variant="temporary"
                     open={open}
                     onClose={handleDrawerToggle}
@@ -55,12 +50,6 @@ const MainDrawer = ({ open, handleDrawerToggle, window }) => {
             )}
         </Box>
     );
-};
-
-MainDrawer.propTypes = {
-    open: PropTypes.bool,
-    handleDrawerToggle: PropTypes.func,
-    window: PropTypes.object,
 };
 
 export default MainDrawer;

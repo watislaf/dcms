@@ -15,16 +15,16 @@ const Palette = (mode: PaletteMode) => {
 
     const greyPrimary = [
         '#ffffff',
-        '#fafafa',
-        '#f5f5f5',
-        '#f0f0f0',
-        '#d9d9d9',
-        '#bfbfbf',
-        '#8c8c8c',
-        '#595959',
-        '#262626',
-        '#141414',
-        '#000000',
+        '#F3F6F9',
+        '#E5EAF2',
+        '#DAE2ED',
+        '#C7D0DD',
+        '#B0B8C4',
+        '#9DA8B7',
+        '#6B7A90',
+        '#434D5B',
+        '#303740',
+        '#1C2025',
     ];
 
     const greyAscent = ['#fafafa', '#bfbfbf', '#434343', '#1f1f1f'];

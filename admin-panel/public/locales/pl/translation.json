@@ -1,6 +1,6 @@
 {
     "login": {
-        "emailIsInvalid": "Email iss  invalid",
+        "emailIsInvalid": "Email invalid",
         "passwordNotPresent": "Pass the password"
     }
 }

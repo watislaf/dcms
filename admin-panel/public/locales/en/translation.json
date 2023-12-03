@@ -1,4 +1,11 @@
 {
+    "list": {
+        "empty": {
+            "header": "Nothing here",
+            "content": "you can change this..",
+            "button": "Create"
+        }
+    },
     "login": {
         "emailIsInvalid": "Email iss  invalid",
         "passwordNotPresent": "Pass the password"

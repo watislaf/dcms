@@ -1,9 +1,9 @@
 import { forwardRef, ReactNode } from 'react';
 
 import { useTheme } from '@mui/material/styles';
-import { Card, CardContent, CardHeader, Divider, Typography } from '@mui/material';
-
-import Highlighter from './third-party/Highlighter';
+import { Card, CardContent, CardHeader, Theme, Typography } from '@mui/material';
+import { SxProps } from '@mui/system';
+import { ProjectTheme } from 'src/themes';
 
 const headerSX = {
     p: 2.5,
@@ -11,22 +11,24 @@ const headerSX = {
 };
 
 type Props = {
-    border: boolean;
-    boxShadow: boolean;
+    border?: boolean;
+    boxShadow?: boolean;
     contentSX?: object;
     darkTitle?: boolean;
     divider?: boolean;
     elevation?: number;
     secondary?: ReactNode;
     shadow?: string;
-    sx: object;
+    sx: SxProps<Theme>;
     title?: string | ReactNode;
     codeHighlight?: boolean;
     content?: boolean;
     children: ReactNode;
 };
 
-const MainCard = forwardRef(
+export type Ref = HTMLDivElement;
+
+const MainCard = forwardRef<Ref, Props>(
     (
         {
             border = true,
@@ -40,12 +42,11 @@ const MainCard = forwardRef(
             shadow,
             sx = {},
             title,
-            codeHighlight,
             ...others
-        }: Props,
+        },
         ref
     ) => {
-        const theme = useTheme();
+        const theme = useTheme<ProjectTheme>();
         boxShadow = theme.palette.mode === 'dark' ? boxShadow || true : boxShadow;
 
         return (
@@ -94,16 +95,6 @@ const MainCard = forwardRef(
                 {/* card content */}
                 {content && <CardContent sx={contentSX}>{children}</CardContent>}
                 {!content && children}
-
-                {/* card footer - clipboard & highlighter  */}
-                {codeHighlight && (
-                    <>
-                        <Divider sx={{ borderStyle: 'dashed' }} />
-                        <Highlighter codeHighlight={codeHighlight} main>
-                            {children}
-                        </Highlighter>
-                    </>
-                )}
             </Card>
         );
     }

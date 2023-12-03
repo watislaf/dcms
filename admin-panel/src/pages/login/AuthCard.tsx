@@ -1,6 +1,6 @@
 import { Box } from '@mui/material';
 
-import MainCard from 'src/components/MainCard';
+import MainCard from 'src/components/mainCard';
 import { ReactNode } from 'react';
 
 type Props = {

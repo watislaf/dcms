@@ -9,51 +9,62 @@ import Palette from './palette.js';
 import Typography from './typography.js';
 import CustomShadows from './shadows.js';
 import componentsOverride from './overrides/index.js';
-import { ThemeOptions } from '@mui/material/styles/createTheme';
 
 // ==============================|| DEFAULT THEME - MAIN  ||============================== //
 
 type Props = { children: ReactNode };
 
-export default function ThemeCustomization({ children }: Props) {
+const useOptions = () => {
     const theme = Palette('light');
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
     const themeTypography = Typography(`'Public Sans', sans-serif`);
     const themeCustomShadows = useMemo(() => CustomShadows(theme), [theme]);
 
-    const themeOptions: ThemeOptions = useMemo(
-        () => ({
-            breakpoints: {
-                values: {
-                    xs: 0,
-                    sm: 768,
-                    md: 1024,
-                    lg: 1266,
-                    xl: 1536,
+    return useMemo(
+        () =>
+            ({
+                breakpoints: {
+                    values: {
+                        xs: 0,
+                        sm: 768,
+                        md: 1024,
+                        lg: 1266,
+                        xl: 1536,
+                    },
                 },
-            },
-            direction: 'ltr',
-            mixins: {
-                toolbar: {
-                    minHeight: 60,
-                    paddingTop: 8,
-                    paddingBottom: 8,
+                direction: 'ltr',
+                mixins: {
+                    toolbar: {
+                        minHeight: 60,
+                        paddingTop: 8,
+                        paddingBottom: 8,
+                    },
                 },
-            },
-            palette: theme.palette,
-            customShadows: themeCustomShadows,
-            typography: themeTypography,
-        }),
+                palette: theme.palette,
+                customShadows: themeCustomShadows,
+                typography: themeTypography,
+            } as const),
         [theme, themeTypography, themeCustomShadows]
     );
+};
 
-    const themes = createTheme(themeOptions);
+const useCreateTheme = () => {
+    const options = useOptions();
+
+    const themes = createTheme(options);
     themes.components = componentsOverride(themes);
+
+    return themes;
+};
+
+export type ProjectTheme = ReturnType<typeof useCreateTheme> & ReturnType<typeof useOptions>;
+
+export default function ThemeCustomization({ children }: Props) {
+    const theme = useCreateTheme();
 
     return (
         <StyledEngineProvider injectFirst>
-            <ThemeProvider theme={themes}>
+            <ThemeProvider theme={theme}>
                 <CssBaseline />
                 {children}
             </ThemeProvider>

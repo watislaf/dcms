@@ -1,58 +1,43 @@
-import { useEffect, useState } from 'react';
+import { createContext, useState } from 'react';
 import { Outlet } from 'react-router-dom';
-import { useDispatch, useSelector } from 'react-redux';
 
-// material-ui
 import { useTheme } from '@mui/material/styles';
-import { Box, Toolbar, useMediaQuery } from '@mui/material';
+import { Box, Toolbar } from '@mui/material';
 
-// project import
-import Drawer from './Drawer/index.js';
-import Header from './Header/index.js';
-import navigation from 'menu-items';
-import Breadcrumbs from 'src/components/@extended/Breadcrumbs.js';
+import Drawer from './Drawer/index';
+import Header from './Header/index';
+import { DRAWER_IS_OPENED } from 'src/utils/constant';
 
-// types
-import { openDrawer } from 'store/reducers/menu';
-
-// ==============================|| MAIN LAYOUT ||============================== //
+export const DrawerIsOpenedContext = createContext(true);
 
 const MainLayout = () => {
     const theme = useTheme();
-    const matchDownLG = useMediaQuery(theme.breakpoints.down('lg'));
-    const dispatch = useDispatch();
 
-    const { drawerOpen } = useSelector((state) => state.menu);
+    const drawerOpen = !!localStorage.getItem(DRAWER_IS_OPENED);
 
     // drawer toggler
     const [open, setOpen] = useState(drawerOpen);
+
     const handleDrawerToggle = () => {
         setOpen(!open);
-        dispatch(openDrawer({ drawerOpen: !open }));
+
+        if (open) {
+            localStorage.setItem(DRAWER_IS_OPENED, 'yes');
+        } else {
+            localStorage.removeItem(DRAWER_IS_OPENED);
+        }
     };
-
-    // set media wise responsive drawer
-    useEffect(() => {
-        setOpen(!matchDownLG);
-        dispatch(openDrawer({ drawerOpen: !matchDownLG }));
-
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [matchDownLG]);
-
-    useEffect(() => {
-        if (open !== drawerOpen) setOpen(drawerOpen);
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [drawerOpen]);
 
     return (
         <Box sx={{ display: 'flex', width: '100%' }}>
-            <Header open={open} handleDrawerToggle={handleDrawerToggle} />
-            <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
-            <Box component="main" sx={{ width: '100%', flexGrow: 1, p: { xs: 2, sm: 3 } }}>
-                <Toolbar />
-                <Breadcrumbs navigation={navigation} title />
-                <Outlet />
-            </Box>
+            <DrawerIsOpenedContext.Provider value={open}>
+                <Header open={open} handleDrawerToggle={handleDrawerToggle} />
+                <Drawer open={open} handleDrawerToggle={handleDrawerToggle} />
+                <Box component="main" sx={{ width: '100%', flexGrow: 1, p: { xs: 2, sm: 3 } }}>
+                    <Toolbar />
+                    <Outlet />
+                </Box>
+            </DrawerIsOpenedContext.Provider>
         </Box>
     );
 };

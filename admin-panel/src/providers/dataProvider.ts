@@ -40,7 +40,8 @@ export const adapter = {
         getList: apis().users.findAllUsers,
     },
 };
-export const dataProvider = (): DataProvider => ({
+
+export const dataProvider: DataProvider = {
     getList: async ({ resource, pagination, sorters, filters }) => {
         const filledPagination = {
             pageSize: pagination?.pageSize || 10,
@@ -48,6 +49,7 @@ export const dataProvider = (): DataProvider => ({
         };
 
         const filledSorters = sorters || [];
+
         if (filters) {
             console.log('FILTERS ARE NOT IMPLEMENTED', filters);
         }
@@ -57,11 +59,6 @@ export const dataProvider = (): DataProvider => ({
             sorters: filledSorters,
         });
 
-        const total = +headers['x-total-count'];
-
-        return {
-            data,
-            total,
-        };
+        return data;
     },
-});
+};

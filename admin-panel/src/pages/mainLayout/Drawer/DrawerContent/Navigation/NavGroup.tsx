@@ -1,17 +1,18 @@
-import PropTypes from 'prop-types';
-import { useSelector } from 'react-redux';
-
 // material-ui
 import { Box, List, Typography } from '@mui/material';
 
 // project import
-import NavItem from './NavItem.js';
+import NavItem from './NavItem';
+import { NavigationItemGroup } from 'src/pages/pages-list';
+import { DrawerIsOpenedContext } from 'src/pages/mainLayout/index';
+import { useContext } from 'react';
 
-// ==============================|| NAVIGATION - LIST GROUP ||============================== //
+type Props = {
+    item: NavigationItemGroup;
+};
 
-const NavGroup = ({ item }) => {
-    const menu = useSelector((state) => state.menu);
-    const { drawerOpen } = menu;
+const NavGroup = ({ item }: Props) => {
+    const drawerOpen = useContext(DrawerIsOpenedContext);
 
     const navCollapse = item.children?.map((menuItem) => {
         switch (menuItem.type) {
@@ -50,10 +51,6 @@ const NavGroup = ({ item }) => {
             {navCollapse}
         </List>
     );
-};
-
-NavGroup.propTypes = {
-    item: PropTypes.object,
 };
 
 export default NavGroup;
